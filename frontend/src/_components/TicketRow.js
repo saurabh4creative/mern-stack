@@ -23,9 +23,9 @@ const TicketRow = (props) => {
                 <span className={`badge bg-${bugColor[type]}`}>{type}</span>  
             </td>
             <td><Link style={{color:"#000", fontWeight:500}} to={`/ticket/${_id}`}>{title}</Link></td>
-            <td>{props.data.project.title}</td>
+            <td><Link to={`/project/${props.data.project._id}`}>{props.data.project.title}</Link></td>
             <td> 
-            <span className={`badge bg-${bugColor[priority]}`}>{priority}</span>  
+                <span className={`badge bg-${bugColor[priority]}`}>{priority}</span>  
             </td>
             <td>{status}</td>
             <td>{props.data?.reportar?.firstName || 'Unassigned'} {props.data?.reportar?.lastName}</td>

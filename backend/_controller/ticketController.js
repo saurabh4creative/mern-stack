@@ -44,4 +44,18 @@ const get_all = async (req, res) => {
      })
 }
 
-module.exports = { get_Data, create_create, get_all }
+const my_tickets = async (req, res) => {
+     const u_id  = req.user._id;
+     
+     const ticketAssign   = await Ticket.find({ assignee : u_id }).populate('project').populate('assignee').populate('reportar');
+     const ticketReportar = await Ticket.find({ reportar : u_id }).populate('project').populate('assignee').populate('reportar');
+
+     res.json({
+          status  : true,
+          message : 'Tickets Fetched Successfully',
+          ticketAssign : ticketAssign,
+          ticketReportar : ticketReportar
+     })
+}
+
+module.exports = { get_Data, create_create, get_all, my_tickets }

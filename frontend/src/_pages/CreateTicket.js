@@ -6,7 +6,7 @@ import { BASE_URL } from '../_helpers/config';
 import { useSelector } from 'react-redux';
 
 const CreateTicket = () => {
-    const { register, handleSubmit, reset } = useForm();
+    const { register, handleSubmit } = useForm();
     const { _id } =  useSelector(state=>state.userReducer.user);
     const [ projects, setProjects ] = useState([]);
     const [ users, setUsers ] = useState([]);
@@ -23,7 +23,7 @@ const CreateTicket = () => {
         axios.post(`${BASE_URL}/api/v1/tickets/create`, data).then((res)=>{
              console.log(res);
         }).catch((err)=>{
-             console.log(err);
+             console.log(err, _id);
         })
     };
     
