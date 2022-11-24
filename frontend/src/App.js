@@ -4,11 +4,13 @@ import Activate from './_pages/Activate';
 import CreateProject from './_pages/CreateProject';
 import CreateTicket from './_pages/CreateTicket';
 import Dashboard from './_pages/Dashboard';
+import EditTicket from './_pages/EditTicket';
 import Login from './_pages/Login';
 import MyWork from './_pages/MyWork';
 import ProjectDetail from './_pages/ProjectDetail';
 import ProjectList from './_pages/ProjectList';
 import Register from './_pages/Register';
+import TicketDetail from './_pages/TicketDetail';
 import TicketList from './_pages/TicketList';
 import YourWork from './_pages/YourWork';
 import Footer from './_views/Footer';
@@ -29,6 +31,8 @@ function App() {
                               <Route path="/project/:id" element={<PrivateRoute><ProjectDetail /></PrivateRoute>}  />
                               <Route path="/ticket/create" element={<PrivateRoute><CreateTicket /></PrivateRoute>}  />
                               <Route path="/ticket" element={<PrivateRoute><TicketList /></PrivateRoute>}  />
+                              <Route path="/ticket/:id" element={<PrivateRoute><TicketDetail /></PrivateRoute>}  />
+                              <Route path="/ticket/edit/:id" element={<PrivateRoute><EditTicket /></PrivateRoute>}  />
                               <Route path="/your-work" element={<PrivateRoute><YourWork /></PrivateRoute>}  />
                               <Route path="/my-work" element={<PrivateRoute><MyWork /></PrivateRoute>}  />
                          </Routes>

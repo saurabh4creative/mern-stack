@@ -9,5 +9,7 @@ router.get('/create', ticketController.get_Data);
 router.post('/create', ticketController.create_create);
 router.get('/all', ticketController.get_all);
 router.get('/my-ticket', ticketController.my_tickets);
+router.get('/ticket/:id', ticketController.get_ticket);
+router.post('/edit/:id', ticketController.edit_ticket);
 
 module.exports = router;

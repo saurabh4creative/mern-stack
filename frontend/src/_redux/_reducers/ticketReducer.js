@@ -5,7 +5,10 @@ const initialState = {
      isError   : false,
      isMessage : false,
      isStatus  : false,
-     tickets   : {}  
+     tickets   : {},
+     assignTickets : {},
+     reportarTickets : {},  
+     ticketDetail : {}
 };
 
 const ticketReducer = (state = initialState, action) => {
@@ -32,11 +35,30 @@ const ticketReducer = (state = initialState, action) => {
             return {
                  ...state,
                  isLoading : false,
-                 isError   : false,
+                 isError   : true,
                  isMessage : action.payload,
                  isStatus  : false,
                  tickets   : {}  
             }   
+          case ticketConstants.MY_TICKETS :
+            return {
+                ...state,
+                isLoading : false,
+                isError   : false,
+                isMessage : action.payload.message,
+                isStatus  : false,
+                assignTickets : action.payload.ticketAssign,
+                reportarTickets : action.payload.ticketReportar,   
+            }     
+          case ticketConstants.TICKET_DETAIL :  
+            return {
+               ...state,
+               isLoading : false,
+               isError   : false,
+               isMessage : action.payload.message,
+               isStatus  : action.payload.status,  
+               ticketDetail : action.payload.ticket 
+           }  
           default : return state;
      }
 }

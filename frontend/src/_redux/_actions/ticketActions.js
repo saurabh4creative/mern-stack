@@ -24,6 +24,46 @@ const ticket_success = () => {
     }
 }
 
-const ticketActions = { ticket_fetch, ticket_success }
+const works_tickets = () => {
+     return async (dispatch) => {
+          axios.get(`${BASE_URL}/api/v1/tickets/my-ticket`).then((res) => {
+                dispatch({
+                     type : ticketConstants.MY_TICKETS,
+                     payload : res.data
+                })
+          }).catch((err)=>{
+                dispatch({
+                     type : ticketConstants.TICKET_FAILED,
+                     payload : err.message
+                })
+          })
+     }
+}
+
+const ticket_detail = (id) => {
+     return async (dispatch) => {
+          axios.get(`${BASE_URL}/api/v1/tickets/ticket/${id}`).then((res) => {
+                if( res.data.status ){
+                    dispatch({
+                         type : ticketConstants.TICKET_DETAIL,
+                         payload : res.data
+                    })
+                }
+                else{
+                    dispatch({
+                         type : ticketConstants.TICKET_FAILED,
+                         payload : res.data.message
+                    })
+                }
+          }).catch((err)=>{
+                dispatch({
+                     type : ticketConstants.TICKET_FAILED,
+                     payload : err.message
+                })
+          })
+     }
+}
+
+const ticketActions = { ticket_fetch, ticket_success, works_tickets, ticket_detail }
 
 export default ticketActions

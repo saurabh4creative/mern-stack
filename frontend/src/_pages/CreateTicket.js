@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import BreadCrumb from '../_views/BreadCrumb'
-import { useForm } from "react-hook-form"
+import {  useForm } from "react-hook-form"
 import axios from 'axios';
 import { BASE_URL } from '../_helpers/config';
 import { useSelector } from 'react-redux';
-
+import { Editor } from 'react-bootstrap-editor';
+ 
 const CreateTicket = () => {
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit, setValue  } = useForm();
     const { _id } =  useSelector(state=>state.userReducer.user);
     const [ projects, setProjects ] = useState([]);
     const [ users, setUsers ] = useState([]);
+
 
     useEffect(()=>{
         axios.get(`${BASE_URL}/api/v1/tickets/create`).then((res)=>{
@@ -24,9 +26,9 @@ const CreateTicket = () => {
              console.log(res);
         }).catch((err)=>{
              console.log(err, _id);
-        })
+        }) 
     };
-    
+ 
 
     return (
         <>
@@ -96,7 +98,10 @@ const CreateTicket = () => {
                                             <div className="row mb-4">
                                                 <label htmlFor="projectdesc" className="col-form-label col-lg-2">Project Description</label>
                                                 <div className="col-lg-10">
-                                                    <input {...register("discription")} name="discription" type="text" className="form-control" placeholder="Project Discription" />
+                                                    {/* <input {...register("discription")} name="discription" type="text" className="form-control" placeholder="Project Discription" /> */}
+
+                                                    <Editor {...register("discription")} name="discription" onChange={(val)=>{setValue('discription', val)}} value="<p></p>" />
+
                                                 </div>
                                             </div> 
 

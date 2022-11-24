@@ -15,9 +15,9 @@ const get_Data = async (req, res) => {
 }
 
 const create_create = async (req, res) => { 
-     const { assignee, discription, priority, project, reportar, title, type } = req.body;
+     const { assignee, discription, priority, project, reportar, title, type, estimate } = req.body;
  
-     const ticket = await Ticket.create({ assignee, discription, priority, project, reportar, title, type });
+     const ticket = await Ticket.create({ assignee, discription, priority, project, reportar, title, type, estimate });
 
      if( ticket ){
           res.json({
@@ -58,4 +58,55 @@ const my_tickets = async (req, res) => {
      })
 }
 
-module.exports = { get_Data, create_create, get_all, my_tickets }
+const get_ticket = async ( req, res ) => {
+     const id = req.params.id;
+
+     if( id ){
+          try{
+               const ticket = await Ticket.findById(id).populate('project').populate('assignee').populate('reportar'); 
+
+               if( ticket ){
+                    res.json({
+                         status  : true,
+                         message : 'Ticket Details',
+                         ticket  : ticket
+                    })
+               }
+               else{
+                    res.json({
+                         status  : false,
+                         message : 'No Ticket Found', 
+                    })
+               }
+
+          }catch(err){
+               res.json({
+                    status : false,
+                    message : 'Something Wrong with Ticket ID or May be not matched...',  
+               }) 
+          }
+     }
+     else{
+          res.json({
+                status : false,
+                message : 'Please Provide the ID',
+          })
+     }
+}
+
+const edit_ticket = async (req, res) => {
+     const id = req.params.id;
+     
+     const { assignee, discription, priority, project, reportar, title, type, estimate, status } = req.body;
+ 
+     const ticket = await Ticket.findOneAndUpdate({_id: id }, 
+                        { $set : { assignee, discription, priority, project, reportar, title, type, estimate, status } } 
+     );
+
+     res.json({
+          statuc : true,
+          data : ticket
+     })
+}
+
+module.exports = { get_Data, create_create, get_all, my_tickets, get_ticket, edit_ticket }

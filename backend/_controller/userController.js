@@ -1,4 +1,7 @@
 const User = require('../_models/userModel');
+const Project = require('../_models/projectModel');
+const Ticket = require('../_models/ticketModel');
+
 const jwt  = require('jsonwebtoken'); 
 const secert = process.env.JWT_SECRET;
 
@@ -99,4 +102,28 @@ const user_login = async (req, res) => {
      }
 }
 
-module.exports = {user_register, user_activate, user_login};
+const user_dashboard = async (req, res) => {
+     const id = req.user._id;
+     
+     const user = await User.findById(id);
+     const project = await Project.find({});
+     const ticket = await Ticket.find({});
+     const ticketAssign   = await Ticket.find({ assignee : id });
+     const ticketReportar = await Ticket.find({ reportar : id });
+     const myprojects = await Project.find({ isUser : id });
+     const doneticket = await Ticket.find({}).where({status : 'Done'});
+
+     res.json({
+          status : false,
+          message : 'Invalid Email or Password',
+          user : user,
+          projects : project,
+          assignee : ticketAssign,
+          reportar : ticketReportar,
+          myprojects : myprojects,
+          allticket : ticket,
+          doneticket : doneticket
+     })
+}
+
+module.exports = {user_register, user_activate, user_login, user_dashboard};
