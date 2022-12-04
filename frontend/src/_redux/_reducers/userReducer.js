@@ -10,7 +10,7 @@ const initialState = {
      isMessage : false,
      user : userInfo ? userInfo : {},
      token : userToken ? userToken : {},
-     status : false
+     status : false,
 }
 
 const userReducer = (state = initialState, action) => {

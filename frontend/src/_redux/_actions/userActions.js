@@ -104,8 +104,30 @@ const login_success = (data) => {
    }
 }
 
+const dashboard_start = () => {
+    return {
+        type : userConstents.DASHBOARD_START
+    }
+}
+
+const dashboard_success = () => {
+    return async(dispatch) => {
+        await axios.get(`${BASE_URL}/api/v1/users/dashboard`).then((res)=>{
+               dispatch({
+                    type : userConstents.DASHBOARD_SUCCESS,
+                    payload : res.data
+               })  
+        }).catch((err) =>{
+               dispatch({
+                   type : userConstents.DASHBOARD_ERROR,
+                   payload : err.message
+               })
+        })
+   }
+}
+
 const userActions = {
-    register_start, register_success, register_failed, register_error, user_activate, login_start, login_success
+    register_start, register_success, register_failed, register_error, user_activate, login_start, login_success, dashboard_start, dashboard_success
 };
 
 export default userActions;

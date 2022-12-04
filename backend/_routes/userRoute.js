@@ -10,6 +10,11 @@ router.post('/login', userController.user_login)
 
 router.use(authMiddleware);
 
+router.get('/get_lists', userController.get_lists);
 router.get('/dashboard', userController.user_dashboard)
+router.post('/create', userController.create_karbon)
+router.get('/karbon', userController.get_karbon)
+router.get('/karbon/:id', userController.get_karbon_detail)
+router.post('/karbon/update', userController.update_karbon_detail)
 
 module.exports = router;

@@ -8,6 +8,9 @@ const userConstents = {
     LOGIN_SUCCESS    : 'LOGIN_SUCCESS',
     LOGIN_FAILED     : 'LOGIN_FAILED',
     LOGIN_ERROR      : 'LOGIN_ERROR', 
+    DASHBOARD_START  : 'DASHBOARD_START',
+    DASHBOARD_SUCCESS : 'DASHBOARD_SUCCESS',
+    DASHBOARD_ERROR  : 'DASHBOARD_ERROR'
 }
 
 export default userConstents;

@@ -4,12 +4,15 @@ import BreadCrumb from '../_views/BreadCrumb'
 import { useSelector, useDispatch } from 'react-redux'
 import ticketActions from '../_redux/_actions/ticketActions'
 import moment from 'moment';
+import SideBar from '../_views/SideBar'
+import Loader from '../_components/Loader'
+import Message from '../_components/Message'
 
 const TicketDetail = () => {
     const { id } = useParams();
     const dataFetchedRef = useRef(false);
     const dispatch = useDispatch();
-    const { isLoading, ticketDetail, isError, isMessage } = useSelector(state => state.ticketReducer);
+    const { isLoading, ticketDetail, isError, isMessage } = useSelector(state => state.ticketReducer); 
 
     useEffect(() => {
         if (dataFetchedRef.current) return;
@@ -19,132 +22,117 @@ const TicketDetail = () => {
     }, [id])
 
     return (
-        <div className="main-content">
-            <div className="page-content">
-                <div className="container-fluid">
-                    <BreadCrumb title="Ticket Detail" />
+        <>
+            <SideBar />
+            <div className='web-layout pt-4 px-4'>
+                
+                <BreadCrumb title="Issue Detail" />
+                
+                { isLoading && <Loader /> }
 
-                    {
-                        isLoading ?
-                            <>
-                                <div className='col-12'>
-                                    <div className="spinner-border text-primary m-1" role="status">
-                                        <span className="sr-only">Loading...</span>
-                                    </div>
-                                </div>
-                            </> :
-                            <>
-                                <div className='row'>
-                                    <div className='col-xl-9'> 
-                                        <div className="card">
-                                            <div className="card-body">
-                                                <h4 className="fs-17 mb-4">
-                                                     {ticketDetail?.title}
-                                                </h4>
+                { isError &&  <Message type="danger" message={isMessage}/>  }
+
+                { !isLoading && Object.keys(ticketDetail).length > 0 && 
+                  <>
+                       <div className='user-layout'>
+                            <div className='row'>
+                                    <div className='col-lg-8'>
+                                        <div className='issue-tracking'>
                                                 
-                                                <div className='d-flex gap-4 pb-4'>
-                                                      
-                                                      <div className='cols'>
-                                                           <div className='btn-info'>
-                                                                 <p>Edit</p>
-                                                                 <Link to={`/ticket/edit/${ticketDetail._id}`} className="btn btn-primary waves-effect btn-label waves-light">
-                                                                     <i className="bx bx-smile label-icon" /> Edit
-                                                                 </Link>
-                                                           </div>
-                                                      </div>
-                                                      
-                                                      <div className='cols'>
-                                                           <div className='btn-info'>
-                                                                 <p>Type</p>
-                                                                 <Link to="/" className="btn btn-primary waves-effect btn-label waves-light">
-                                                                     <i className="bx bx-smile label-icon" /> {ticketDetail?.type}
-                                                                 </Link>
-                                                           </div>
-                                                      </div>
-
-                                                      <div className='cols'>
-                                                           <div className='btn-info'>
-                                                                 <p>Priority</p>
-                                                                 <Link to="/" className="btn btn-primary waves-effect btn-label waves-light">
-                                                                     <i className="bx bx-smile label-icon" /> {ticketDetail?.priority}
-                                                                 </Link>
-                                                           </div>
-                                                      </div>
-
-                                                      <div className='cols'>
-                                                           <div className='btn-info'>
-                                                                 <p>Status</p>
-                                                                 <Link to="/" className="btn btn-primary waves-effect btn-label waves-light">
-                                                                     <i className="bx bx-smile label-icon" /> {ticketDetail?.status}
-                                                                 </Link>
-                                                           </div>
-                                                      </div>
+                                                <div className='d-flex mb-4 gap-3 title-ts'>
+                                                    <div>
+                                                            <div className={`typeinfo ${ticketDetail?.type}`}>
+                                                                { ticketDetail?.type === 'Task' && <i className="fa fa-check"></i> }
+                                                                { ticketDetail?.type === 'Story' && <i className="fa fa-bookmark"></i> }
+                                                                { ticketDetail?.type === 'Bug' && <i className="fa fa-circle"></i> }
+                                                                { ticketDetail?.type === 'Feature' && <i className="fa fa-gear"></i> }
+                                                            </div> 
+                                                    </div>
+                                                    <div>
+                                                            <h4 className='m-0 pt-2'>{ticketDetail?.title}</h4>
+                                                    </div>
                                                 </div>
-  
-                                                <h4 className="card-title mb-4">Discription</h4>
 
-                                                <div className="shadow-none p-3 bg-light rounded">
+                                                <h6>Description</h6>
+
+                                                <div className="shadow-none p-3 mt-3 mb-4 bg-light rounded">
                                                     <div dangerouslySetInnerHTML={{__html : ticketDetail?.discription}}></div>
                                                 </div> 
-                                            </div>
+
+                                                <h6>Activity</h6>
                                         </div>
                                     </div>
-                                    <div className="col-xl-3">
-                                        <div className="card">
-                                            <div className="card-body">
 
-                                                <div className="table-responsive">
-                                                    <table className="table">
-                                                        <tbody>
-                                                            <tr>
-                                                                <th scope="col">Project</th>
-                                                                <td scope="col">{ticketDetail?.project?.title}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th scope="row">Estimate</th>
-                                                                <td>
-                                                                    {
-                                                                         ticketDetail?.estimate ? ticketDetail?.estimate : '---'
-                                                                    }
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th scope="row">Reportar</th>
-                                                                <td>{ticketDetail?.reportar?.firstName} {ticketDetail?.reportar?.lastName}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th scope="row">Assignee</th>
-                                                                <td>{ticketDetail?.assignee?.firstName} {ticketDetail?.assignee?.lastName}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th scope="row">Created ON</th>
-                                                                <td>{moment(ticketDetail?.createdAt).format('D MMM, YY | h:mm:ss A')}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th scope="row">Last Update</th>
-                                                                <td>{moment(ticketDetail?.updatedAt).format('D MMM, YY | h:mm:ss A')}</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
+                                    <div className='col-lg-4'>
+                                        <div className='sprint-bg chns p-3'>
+                                                <div className='col-boxs issue-list bg-white p-3 mb-3'>
+                                                    <label>Status</label>
+                                                    <p className='mb-0'>{ticketDetail?.status}</p>
                                                 </div>
+
+                                                <div className='col-boxs issue-list bg-white p-3 mb-3'>
+                                                    <label>Priority</label>
+                                                    <div className='mb-0'> 
+                                                        <div title={ticketDetail?.priority} className={`typeinfoP ${ticketDetail?.priority}`}>
+                                                            {   
+                                                                ticketDetail?.priority == 'Low' || ticketDetail?.priority == 'Medium' ? <i className="fa fa-arrow-down" /> : <i className="fa fa-arrow-up" /> 
+                                                            }
+                                                        </div> 
+                                                    </div>
+                                                </div>
+
+                                                <div className='col-boxs issue-list bg-white p-3 mb-3'>
+                                                    <label>Project Name</label>
+                                                    <p className='mb-0'>{ticketDetail?.project?.title}</p>
+                                                </div>
+
+                                                <div className='col-boxs issue-list bg-white p-3 mb-3'>
+                                                    <label>Estimate</label>
+                                                    <p className='mb-0'>{ ticketDetail?.estimate ? ticketDetail?.estimate : '---' }</p>
+                                                </div>
+
+                                                <div className='col-boxs issue-list bg-white p-3 mb-3'>
+                                                    <label>Reportar</label>
+                                                    <p className='mb-0'>{ticketDetail?.reportar?.firstName} {ticketDetail?.reportar?.lastName}</p>
+                                                </div>
+
+                                                <div className='col-boxs issue-list bg-white p-3 mb-3'>
+                                                    <label>Assignee</label>
+                                                    <p className='mb-0'>{ticketDetail?.assignee?.firstName} {ticketDetail?.assignee?.lastName}</p>
+                                                </div>
+
+                                                <div className='col-boxs issue-list bg-white p-3 mb-3'>
+                                                    <label>Create On</label>
+                                                    <p className='mb-0'>{moment(ticketDetail?.createdAt).format('D MMM, YY | h:mm:ss A')}</p>
+                                                </div>
+
+                                                <div className='col-boxs issue-list bg-white p-3 mb-3'>
+                                                    <label>Updated On</label>
+                                                    <p className='mb-0'>{moment(ticketDetail?.updatedAt).format('D MMM, YY | h:mm:ss A')}</p>
+                                                </div>
+
+                                                <div className='col-boxs issue-list bg-white p-3 mb-0'>
+                                                    <label>Sprint</label>
+                                                    <div className='d-flex gap-2'>{
+                                                        ticketDetail?.board?.map((item)=>{
+                                                                return ( <span key={item._id}><Link to={`/board/${item._id}`}>{item.name}</Link></span> )
+                                                        })
+                                                    }</div>
+                                                </div>
+                                        </div>
+
+                                        <div className='d-flex mt-4 justify-content-start'>
+                                            <div>
+                                                <Link to={`/ticket/edit/${ticketDetail._id}`} className='btn btn-primary w-100 waves-effect waves-light'>Edit Issue</Link>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </>
-                    }
-
-                    {
-                        isError &&
-                        <>
-                            <div className='alert alert-danger'>
-                                {isMessage}
                             </div>
-                        </>
-                    }
-                </div>
+                        </div>
+                  </> 
+                  }
             </div>
-        </div>
+        </>
     )
 }
 

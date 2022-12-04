@@ -21,6 +21,11 @@ const ticketSchema = mongoose.Schema({
         type : String,
         required : false, 
     },
+    points:{
+        type : Number,
+        default : 0,
+        required : false, 
+    },
     status:{
         type : String,
         required : false,
@@ -40,7 +45,12 @@ const ticketSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: false,
         ref : 'User' 
-    }
+    },
+    board : [{
+        type: mongoose.Schema.Types.ObjectId,
+        required: false,
+        ref : 'Karbon' 
+    }],
 },{
     timestamps:true
 })

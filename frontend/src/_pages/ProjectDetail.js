@@ -6,6 +6,9 @@ import { useSelector, useDispatch } from 'react-redux'
 import projectActions from '../_redux/_actions/projectActions'; 
 import moment from 'moment';
 import MD5 from "crypto-js/md5"
+import SideBar from '../_views/SideBar'
+import Loader from '../_components/Loader';
+import Message from '../_components/Message';
 
 const ProjectDetail = () => {
     const dispatch = useDispatch();   
@@ -27,141 +30,117 @@ const ProjectDetail = () => {
         return name ? name.split('')[0] : '';
     } 
 
+    const bugColor = {
+        "Done"  : 'done',
+        "Hold"  : 'hold',
+        "To Do" : 'todo', 
+    };
+
     return (
         <>
-            <div className="main-content">
-                <div className="page-content">
-                    <div className="container-fluid">
+                <SideBar />
+                <div className='web-layout pt-4 px-4'>
+                    <BreadCrumb title="Project Overview" />
 
-                        <BreadCrumb title="Project Detail" />
-
-                        <div className='d-flex justify-content-end mb-4'>
-                            <Link to={'/project/create'} className="btn btn-primary waves-effect waves-light">Add Project</Link>
+                    <div className='user-layout'>
+                        
+                        <div className='d-flex justify-content-between align-items-center mb-4'>
+                                <div>
+                                    {tickets.length} Issue Found
+                                </div>
+                                <div>
+                                    <Link to={'/project'} className="btn btn-primary waves-effect waves-light">All Projects</Link>
+                                </div>
                         </div> 
 
-                        {
-                            isError && 
-                            <>
-                                <div className='col-12'>
-                                    <div className='alert alert-danger'>
-                                            {isMessage}
-                                    </div>
-                                </div>    
-                            </> 
-                        }
+                        { isLoading &&  <Loader /> } 
 
-                        {
-                            isLoading ? 
-                            <>
-                                <div className='col-12'>
-                                        <div className="spinner-border text-primary m-1" role="status">
-                                            <span className="sr-only">Loading...</span>
-                                        </div>
-                                </div>
-                            </> 
-                            :
-                            <>
-                                
-                                {
-                                    Object.keys(projectDetail).length > 0 && 
-                                    <>
-                                        <div className="row">
-                                            <div className="col-xl-12">
-                                                <div className="card">
-                                                    <div className="card-body">
-                                                        <div className="d-flex">
-                                                            <div className="flex-shrink-0 me-4">
-                                                                <div className="avatar-md">
-                                                                    <span className="avatar-title rounded-circle bg-light text-danger font-size-16">
-                                                                        <img className='rounded-circle' src={`https://www.gravatar.com/avatar/${MD5(_id).toString()}?d=retro&s=72`} alt="" />
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                            <div className="flex-grow-1 overflow-hidden">
-                                                                <h5 className="text-truncate font-size-15">
-                                                                    {title}
-                                                                </h5>
-                                                                <p className="text-muted mb-4">{discription}</p>
-                                                                <div className='avatar-group align-items-center gap-2'>
-                                                                        <div className="avatar-group-item">
-                                                                            <div className="avatar-xs">
-                                                                                <span className="avatar-title rounded-circle bg-danger text-white font-size-16">
-                                                                                    {avtarName(isUser?.firstName)}{avtarName(isUser?.lastName)}
-                                                                                </span>
-                                                                            </div>  
-                                                                    </div>
-                                                                    {isUser?.firstName} {isUser?.lastName}
-                                                                </div>
-                                                            </div>
+                        { isError &&  <Message type="danger" message={isError}/>  }
+
+                        
+                        { !isLoading && <>
+                            <div className='project-details mb-5'>
+                                    <h5>{title}</h5>
+                                    <p className="text-muted mt-3 mb-4">{discription}</p>
+                                    <ul className="navbar-nav d-flex align-items-center flex-row gap-3">
+                                        <li>
+                                            <div className='d-flex align-items-center gap-2'>
+                                                    <div>
+                                                        <div className={`typeinfo ${bugColor[status]}`}>
+                                                                { status === 'Done' && <i className="fa fa-check"></i> }
+                                                                { status === 'Hold' && <i className="fa fa-circle"></i> }
+                                                                { status === 'To Do' && <i className="fa fa-bookmark"></i> } 
                                                         </div>
                                                     </div>
-                                                <div className="px-4 py-3 border-top">
-                                                    <ul className="list-inline mb-0">
-                                                        <li className="list-inline-item me-3">
-                                                            <span className={`badge bg-${status === 'Completed' ? 'success' : 'info'}`}>{status}</span>
-                                                        </li>
-                                                        <li className="list-inline-item me-3">
-                                                            <i className="bx bx-calendar me-1" /> 
-                                                            { moment(createdAt).format('D MMM, YY') }
-                                                        </li>
-                                                        <li className="list-inline-item me-3">
-                                                            <i className="bx bx-comment-dots me-1" /> 214
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                                    <div>{ status }</div>
+                                            </div> 
+                                        </li> 
+                                        <li>
+                                            <div className='d-flex align-items-center gap-2'>
+                                                    <div>
+                                                        <div className={`typeinfo Feature`}>
+                                                            <i className='fa fa-calendar'></i>     
+                                                        </div>
+                                                    </div>
+                                                    <div> { moment(createdAt).format('D MMM, YY') }</div>
+                                            </div>  
+                                        </li> 
+                                        <li>
+                                            <div className='d-flex align-items-center gap-2'>
+                                                    <div>
+                                                        <div className={`typeinfo hold`}>
+                                                            <i className='fa fa-pen'></i>     
+                                                        </div>
+                                                    </div>
+                                                    <div> {tickets.length} Tickets </div>
+                                            </div>  
+                                        </li> 
+                                        <li>
+                                            <div className='d-flex align-items-center gap-2'>
+                                                    <div>
+                                                        <div className={`typeinfo done`}>
+                                                            <i className='fa fa-user'></i>     
+                                                        </div>
+                                                    </div>
+                                                    <div>{isUser?.firstName} {isUser?.lastName}</div>
+                                            </div>  
+                                        </li>
+                                    </ul>
+                            </div>
+                        </>}    
 
-                                    <div className='mb-3'></div>
-
-                                    <div className="page-title-box d-sm-flex align-items-center justify-content-between">
-                                        <h4 className="mb-sm-0 font-size-18">All Tickets</h4>
-                                        <div className="page-title-right"></div>
-                                    </div>
-
-                                    <div className='d-flex justify-content-end mb-4'>
-                                        <Link to={'/ticket/create'} className="btn btn-primary waves-effect waves-light">Add Ticket</Link>
-                                    </div>
-
-                                    <div className="row">
-                                        <div className='col-lg-12'>
-                                            <div className="table-responsive">
-                                                <table className="table project-list-table table-nowrap align-middle table-borderless">
-                                                    <thead>
-                                                        <tr>
-                                                            <th scope="col">Type</th>
-                                                            <th scope="col">Summary</th>
-                                                            <th scope="col">Project Name</th>
-                                                            <th scope="col">Priority</th>
-                                                            <th scope="col">Status</th>
-                                                            <th scope="col">Reporter</th>
-                                                            <th scope="col">Assignee</th>
-                                                            <th scope="col">Created ON</th>
-                                                            <th scope="col">Last Updated</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {
-                                                            Object.keys(tickets).length > 0 &&  tickets?.map((item)=>{ 
-                                                                    return (
-                                                                        <TicketRow key={item._id} data={item} />
-                                                                    )
-                                                            }) 
-                                                        } 
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                         
-                                    </>
-                                } 
+                            { Object.keys(tickets).length > 0 ? <> 
+                                <div className='project-list'>
+                                        <table className="table default-table">
+                                                <thead>
+                                                    <tr>
+                                                        <td>Type</td>
+                                                        <td>Issue</td>
+                                                        <td>Project</td>
+                                                        <td>Priority</td>
+                                                        <td>Status</td>
+                                                        <td>Reporter</td>
+                                                        <td>Assignee</td>
+                                                        <td>Create On</td>
+                                                        <td>Updated On</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {
+                                                        Object.keys(tickets).length > 0 &&  tickets?.map((item)=>{ 
+                                                            return  <TicketRow key={item._id} data={item} />
+                                                        })      
+                                                    }
+                                                </tbody>
+                                        </table> 
+                                </div>
+                            </> : 
+                            <>
+                                { !isLoading && <Message type="danger" message={'No Issues Found'} /> }
                             </>
                         } 
                     </div>
                 </div>
-            </div>
         </>
     )
 }

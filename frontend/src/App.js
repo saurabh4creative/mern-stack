@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PrivateRoute from './_components/PrivateRoute';
 import Activate from './_pages/Activate';
+import Board from './_pages/Board';
+import BoardDetail from './_pages/BoardDetail';
 import CreateProject from './_pages/CreateProject';
 import CreateTicket from './_pages/CreateTicket';
 import Dashboard from './_pages/Dashboard';
@@ -15,6 +17,7 @@ import TicketList from './_pages/TicketList';
 import YourWork from './_pages/YourWork';
 import Footer from './_views/Footer';
 import Header from './_views/Header';
+
 
 function App() {
   return (
@@ -33,10 +36,12 @@ function App() {
                               <Route path="/ticket" element={<PrivateRoute><TicketList /></PrivateRoute>}  />
                               <Route path="/ticket/:id" element={<PrivateRoute><TicketDetail /></PrivateRoute>}  />
                               <Route path="/ticket/edit/:id" element={<PrivateRoute><EditTicket /></PrivateRoute>}  />
-                              <Route path="/your-work" element={<PrivateRoute><YourWork /></PrivateRoute>}  />
-                              <Route path="/my-work" element={<PrivateRoute><MyWork /></PrivateRoute>}  />
-                         </Routes>
-                    <Footer/>
+                              <Route path="/assign-issue" element={<PrivateRoute><YourWork /></PrivateRoute>}  />
+                              <Route path="/my-issue" element={<PrivateRoute><MyWork /></PrivateRoute>}  />
+                              <Route path="/board" element={<PrivateRoute><Board /></PrivateRoute>}  />
+                              <Route path="/board/create" element={<PrivateRoute><Board /></PrivateRoute>}  />
+                              <Route path="/board/:id" element={<PrivateRoute><BoardDetail /></PrivateRoute>}  />
+                         </Routes> 
             </Router> 
        </div>
   );

@@ -1,6 +1,7 @@
 const User = require('../_models/userModel');
 const Project = require('../_models/projectModel');
 const Ticket = require('../_models/ticketModel');
+const Karbon = require('../_models/karbonModel');
 
 const jwt  = require('jsonwebtoken'); 
 const secert = process.env.JWT_SECRET;
@@ -114,16 +115,106 @@ const user_dashboard = async (req, res) => {
      const doneticket = await Ticket.find({}).where({status : 'Done'});
 
      res.json({
-          status : false,
-          message : 'Invalid Email or Password',
-          user : user,
-          projects : project,
-          assignee : ticketAssign,
-          reportar : ticketReportar,
-          myprojects : myprojects,
-          allticket : ticket,
-          doneticket : doneticket
+          status : true,
+          message : 'Details Fetch Successfully',
+          // user : user,
+          all_projects : project,
+          my_projects  : myprojects,
+          my_tickets   : ticketAssign,
+          all_tickets  :  ticket
+          // assignee : ticketAssign,
+          // reportar : ticketReportar,
+          // myprojects : myprojects,
+          // allticket : ticket,
+          // doneticket : doneticket
      })
 }
 
-module.exports = {user_register, user_activate, user_login, user_dashboard};
+const create_karbon = async (req, res) => {
+     const id = req.user._id; 
+
+
+     const karbon = await Karbon.create({ 
+          name  : req.body.name,
+          discription : req.body.discription,
+          isUser : id,
+          listUser : req.body.user, 
+          start : req.body.start,
+          end : req.body.end
+     });
+
+     res.json({
+          status  : true,
+          message : 'Data Fetch',
+          data : karbon
+     })
+}
+
+const get_karbon = async (req, res) => {
+     const id = req.user._id;
+
+     const kr = await Karbon.find({$or:[{listUser: id}, {isUser : id}]}).populate('isUser').populate('listUser').populate({
+          path: 'tickets',
+          populate : {
+               path : 'project'
+          }
+     });
+      
+     res.json({
+          status  : true,
+          message : 'Data Fetch sad',
+          data : kr
+     })
+}
+
+const get_karbon_detail = async (req, res) => {
+     const id = req.user._id;
+
+     const kr = await Karbon.find( { _id : req.params.id, $or:[{listUser: id}, {isUser : id}] } ).populate('isUser').populate('listUser').populate({
+          path: 'tickets',
+          populate : {
+               path : 'project'
+          },
+          populate : {
+               path : 'reportar'
+          },
+          populate : {
+               path : 'assignee'
+          }
+     });
+      
+     res.json({
+          status  : true,
+          message : 'Data Fetch',
+          data : kr[0]
+     })
+}
+
+const update_karbon_detail = async (req, res) => {
+     
+     const {id, ticket_ID} = req.body;
+
+     const kr = await Karbon.findByIdAndUpdate(id, {$push: {"tickets": [ticket_ID]}} );
+     const tk = await Ticket.findByIdAndUpdate(ticket_ID, {$push: {"board": [id]}} );
+      
+     res.json({
+          status  : true,
+          message : 'Data Fetch',
+          data : kr,
+          ticket : tk
+     })
+}
+
+const get_lists = async (req, res) => {
+     const user = await User.find({});
+     const project = await Project.find({});
+
+     res.json({
+          status : true,
+          message : 'Data Fetch Successfully',
+          users : user,
+          projects : project
+     })
+}
+
+module.exports = {user_register, user_activate, user_login, user_dashboard, create_karbon, get_karbon, get_karbon_detail, update_karbon_detail, get_lists};

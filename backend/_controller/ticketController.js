@@ -35,7 +35,7 @@ const create_create = async (req, res) => {
 }
 
 const get_all = async (req, res) => {
-     const ticket = await Ticket.find({}).populate('project').populate('assignee').populate('reportar');
+     const ticket = await Ticket.find({}).populate('project').populate('assignee').populate('reportar').populate('board').sort({createdAt:-1});
 
      res.json({
           status  : true,
@@ -47,8 +47,8 @@ const get_all = async (req, res) => {
 const my_tickets = async (req, res) => {
      const u_id  = req.user._id;
      
-     const ticketAssign   = await Ticket.find({ assignee : u_id }).populate('project').populate('assignee').populate('reportar');
-     const ticketReportar = await Ticket.find({ reportar : u_id }).populate('project').populate('assignee').populate('reportar');
+     const ticketAssign   = await Ticket.find({ assignee : u_id }).populate('project').populate('assignee').populate('reportar').sort({createdAt:-1});
+     const ticketReportar = await Ticket.find({ reportar : u_id }).populate('project').populate('assignee').populate('reportar').sort({createdAt:-1});
 
      res.json({
           status  : true,
@@ -63,7 +63,7 @@ const get_ticket = async ( req, res ) => {
 
      if( id ){
           try{
-               const ticket = await Ticket.findById(id).populate('project').populate('assignee').populate('reportar'); 
+               const ticket = await Ticket.findById(id).populate('project').populate('assignee').populate('reportar').populate('board'); 
 
                if( ticket ){
                     res.json({
@@ -97,10 +97,10 @@ const get_ticket = async ( req, res ) => {
 const edit_ticket = async (req, res) => {
      const id = req.params.id;
      
-     const { assignee, discription, priority, project, reportar, title, type, estimate, status } = req.body;
+     const { assignee, discription, priority, project, reportar, title, type, estimate, status, points } = req.body;
  
      const ticket = await Ticket.findOneAndUpdate({_id: id }, 
-                        { $set : { assignee, discription, priority, project, reportar, title, type, estimate, status } } 
+                        { $set : { assignee, discription, priority, project, reportar, title, type, estimate, status, points } } 
      );
 
      res.json({

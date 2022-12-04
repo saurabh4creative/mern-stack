@@ -3,13 +3,16 @@ import BreadCrumb from '../_views/BreadCrumb'
 import TicketRow from '../_components/TicketRow'
 import { useSelector, useDispatch } from 'react-redux'
 import ticketActions from '../_redux/_actions/ticketActions'
-
+import SideBar from '../_views/SideBar';
+import Loader from '../_components/Loader';
+import Message from '../_components/Message';
+import { Link } from 'react-router-dom'
 
 const YourWork = () => {
      
     const dataFetchedRef = useRef(false);
     const dispatch = useDispatch();  
-    const { isLoading, assignTickets } = useSelector(state=>state.ticketReducer);
+    const { isLoading, assignTickets, isError } = useSelector(state=>state.ticketReducer);
 
     useEffect(()=>{
         if (dataFetchedRef.current) return;
@@ -20,54 +23,57 @@ const YourWork = () => {
     }, [dispatch])
 
     return (
-        <div className="main-content">
-            <div className="page-content">
-                <div className="container-fluid">
-                    <BreadCrumb title="Your Work" />
+        <>
+            <SideBar />
+            <div className='web-layout pt-4 px-4'>
+                <BreadCrumb title="All Issues" />
 
-                    {
-                            isLoading ? <>
-                                <div className='col-12'>
-                                        <div className="spinner-border text-primary m-1" role="status">
-                                            <span className="sr-only">Loading...</span>
-                                        </div>
-                                </div>
-                            </> : <>
-                            <div className="row">
-                                <div className='col-lg-12'>
-                                    <div className="table-responsive">
-                                        <table className="table project-list-table table-nowrap align-middle table-borderless">
-                                            <thead>
+                <div className='user-layout'>
+                     
+                    <div className='d-flex justify-content-between align-items-center mb-4'>
+                        <div>
+                             {Object.keys(assignTickets).length} Issues Found
+                        </div>
+                        <div>
+                             <Link to={'/ticket/create'} className="btn btn-primary waves-effect waves-light">Add Issue</Link>
+                        </div>
+                    </div> 
+
+                    <div className='project-list'>
+                            { isLoading &&  <Loader /> } 
+
+                            { isError &&  <Message type="danger" message={isError}/>  }
+
+                            { !Object.keys(assignTickets).length && !isLoading && <Message type="info" message={'No Issues Found'} /> }
+
+                            { !isLoading && Object.keys(assignTickets).length > 0 &&  
+                                  <table className='table default-table'>
+                                        <thead>
                                                 <tr>
-                                                    <th scope="col">Type</th>
-                                                    <th scope="col">Summary</th>
-                                                    <th scope="col">Project Name</th>
-                                                    <th scope="col">Priority</th>
-                                                    <th scope="col">Status</th>
-                                                    <th scope="col">Reporter</th>
-                                                    <th scope="col">Assignee</th>
-                                                    <th scope="col">Created ON</th>
-                                                    <th scope="col">Last Updated</th>
+                                                     <td>Type</td>
+                                                     <td>Issue</td>
+                                                     <td>Project</td>
+                                                     <td>Priority</td>
+                                                     <td>Status</td>
+                                                     <td>Reporter</td>
+                                                     <td>Assignee</td>
+                                                     <td>Create On</td>
+                                                     <td>Updated On</td>
                                                 </tr>
-                                            </thead>
-                                            <tbody>
-                                                {
-                                                    Object.keys(assignTickets).length > 0 &&  assignTickets?.map((item)=>{ 
-                                                            return (
-                                                                <TicketRow key={item._id} data={item} />
-                                                            )
-                                                    }) 
-                                                } 
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                            </>
-                    }
+                                        </thead>
+                                        <tbody>
+                                            {
+                                                assignTickets?.map((item)=>{
+                                                    return <TicketRow key={item._id} data={item} />
+                                                })    
+                                            }
+                                        </tbody>
+                                 </table>  
+                            }
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     )
 }
 

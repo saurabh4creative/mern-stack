@@ -58,7 +58,18 @@ const ticketReducer = (state = initialState, action) => {
                isMessage : action.payload.message,
                isStatus  : action.payload.status,  
                ticketDetail : action.payload.ticket 
-           }  
+           } 
+          case ticketConstants.GET_DETAILS :  
+            return {
+               ...state,
+               isLoading : false,
+               isError   : false,
+               isMessage : action.payload.message,
+               isStatus  : action.payload.status,  
+               ticketDetail : state.ticketDetail,
+               get_projects : action.payload.projects,
+               get_users : action.payload.users
+           }    
           default : return state;
      }
 }
