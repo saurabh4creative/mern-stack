@@ -21,7 +21,7 @@ const SideBar = () => {
                                      Projects
                                 </Link>
                                 <Link to={'/ticket'} className="nav-link text-dark ps-0" >
-                                     Issues 
+                                     All Issues 
                                 </Link>
                                 <Link to={'/my-issue'} className="nav-link text-dark ps-0" >
                                      My Issues 
@@ -32,7 +32,9 @@ const SideBar = () => {
                                 <Link to={'/board'} className="nav-link text-dark ps-0" >
                                      Board 
                                 </Link>
-                                <Link className="nav-link ps-0 disabled">Disabled</Link>
+                                <Link to={'/active-board'} className="nav-link text-dark ps-0" >
+                                     Active Board 
+                                </Link>
                             </nav>
                      </div>
                </div>

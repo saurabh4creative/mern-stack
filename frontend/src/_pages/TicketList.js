@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react' 
+import React, { useEffect, useRef } from 'react' 
 import BreadCrumb from '../_views/BreadCrumb'
 import TicketRow from '../_components/TicketRow'
 import { Link } from 'react-router-dom'
@@ -11,14 +11,14 @@ import Message from '../_components/Message';
 const TicketList = () => {
     const dataFetchedRef = useRef(false);
     const dispatch = useDispatch();  
-    const { isLoading, isError, isMessage, isStatus, tickets } = useSelector(state=>state.ticketReducer);
+    const { isLoading, isError, tickets } = useSelector(state=>state.ticketReducer);
     
     useEffect(() => {
         if (dataFetchedRef.current) return;
         dataFetchedRef.current = true;
         dispatch(ticketActions.ticket_fetch());
         dispatch(ticketActions.ticket_success()); 
-    }, [])
+    }, [dispatch])
 
     return (
         <>

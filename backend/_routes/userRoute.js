@@ -16,5 +16,6 @@ router.post('/create', userController.create_karbon)
 router.get('/karbon', userController.get_karbon)
 router.get('/karbon/:id', userController.get_karbon_detail)
 router.post('/karbon/update', userController.update_karbon_detail)
+router.post('/karbon/active', userController.active_karbon_detail)
 
 module.exports = router;

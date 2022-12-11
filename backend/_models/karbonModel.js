@@ -17,7 +17,7 @@ const karbonSchema = mongoose.Schema({
     status:{
         type : String,
         required : true,
-        default : 'Backlog'
+        default : 'Pending'
     },
     isUser : {
         type: mongoose.Schema.Types.ObjectId,

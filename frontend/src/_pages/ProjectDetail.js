@@ -4,8 +4,7 @@ import TicketRow from '../_components/TicketRow';
 import BreadCrumb from '../_views/BreadCrumb';
 import { useSelector, useDispatch } from 'react-redux' 
 import projectActions from '../_redux/_actions/projectActions'; 
-import moment from 'moment';
-import MD5 from "crypto-js/md5"
+import moment from 'moment'; 
 import SideBar from '../_views/SideBar'
 import Loader from '../_components/Loader';
 import Message from '../_components/Message';
@@ -13,8 +12,8 @@ import Message from '../_components/Message';
 const ProjectDetail = () => {
     const dispatch = useDispatch();   
     const dataFetchedRef = useRef(false);
-    const { isLoading, isError, isMessage, tickets, projectDetail } = useSelector(state=>state.projectReducer);
-    const { title, discription, createdAt, isUser, status, _id } = projectDetail || {};
+    const { isLoading, isError, tickets, projectDetail } = useSelector(state=>state.projectReducer);
+    const { title, discription, createdAt, isUser, status } = projectDetail || {};
 
     const { id } = useParams(); 
     
@@ -24,11 +23,7 @@ const ProjectDetail = () => {
         
         dispatch(projectActions.project_start());
         dispatch(projectActions.project_detail_success(id)); 
-    }, [id]);
-
-    const avtarName = (name) => {
-        return name ? name.split('')[0] : '';
-    } 
+    }, [id, dispatch]); 
 
     const bugColor = {
         "Done"  : 'done',

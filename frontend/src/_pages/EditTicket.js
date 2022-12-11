@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useParams, Link, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import BreadCrumb from '../_views/BreadCrumb'
 import { useSelector, useDispatch } from 'react-redux'
 import ticketActions from '../_redux/_actions/ticketActions'
@@ -16,7 +16,7 @@ const EditTicket = () => {
     const { id } = useParams();
     const dataFetchedRef = useRef(false);
     const dispatch = useDispatch();
-    const { isLoading, ticketDetail, get_projects, get_users, isError, isMessage } = useSelector(state => state.ticketReducer);
+    const { isLoading, ticketDetail, get_projects, get_users, isError } = useSelector(state => state.ticketReducer);
     const { register, handleSubmit, setValue  } = useForm();
     const [ isLoad, setIsLoad ] = useState(false);
     const [ statusRes, setStatusRs ] = useState(false);

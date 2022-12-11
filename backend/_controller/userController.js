@@ -167,27 +167,49 @@ const get_karbon = async (req, res) => {
      })
 }
 
+var mongoose = require('mongoose');
+
 const get_karbon_detail = async (req, res) => {
      const id = req.user._id;
-
-     const kr = await Karbon.find( { _id : req.params.id, $or:[{listUser: id}, {isUser : id}] } ).populate('isUser').populate('listUser').populate({
-          path: 'tickets',
-          populate : {
-               path : 'project'
-          },
-          populate : {
-               path : 'reportar'
-          },
-          populate : {
-               path : 'assignee'
-          }
-     });
-      
-     res.json({
-          status  : true,
-          message : 'Data Fetch',
-          data : kr[0]
-     })
+     
+     if( mongoose.isValidObjectId(req.params.id) ){
+               const kr = await Karbon.find( { _id : req.params.id, $or:[{listUser: id}, {isUser : id}] } ).populate('isUser').populate('listUser').populate({
+                    path: 'tickets',
+                    populate : {
+                         path : 'assignee'
+                    } 
+               }).populate({
+                    path: 'tickets',
+                    populate : {
+                         path : 'reportar'
+                    } 
+               }).populate({
+                    path: 'tickets',
+                    populate : {
+                         path : 'project'
+                    } 
+               }); 
+               
+               if( kr.length ){
+                    res.json({
+                         status  : true,
+                         message : 'Data Fetch Successfully',
+                         data : kr[0]
+                    })
+               }else{
+                    res.json({
+                         status  : false,
+                         message : 'No Record Found...',
+                         data    : {} 
+                    })
+               } 
+     }else{
+          res.json({
+               status  : false,
+               message : 'Wrond Karbon Board ID. Please check',
+               data    : {} 
+          })
+     } 
 }
 
 const update_karbon_detail = async (req, res) => {
@@ -205,6 +227,37 @@ const update_karbon_detail = async (req, res) => {
      })
 }
 
+const active_karbon_detail = async (req, res) => {
+     const {sprint_id, isActive, ticketR, ticketP} = req.body;
+     
+     if( isActive ){
+          const karbon = await Karbon.findOneAndUpdate({ _id: sprint_id }, 
+               { $set : { isActive : isActive, status : 'Start'  } } 
+          );
+          res.json({
+               status : true,
+               message : 'Start Successfully',
+               board : karbon
+          })
+     }else{
+          const karbon = await Karbon.findOneAndUpdate({ _id: sprint_id }, 
+               { $set : { isActive : isActive, tickets : ticketP, status : 'Completed'  } } 
+          );
+          
+          const ticket = await Ticket.updateMany(
+               { _id : { $in: ticketR } },
+               { $set  : { board : [] } } 
+          ); 
+
+          res.json({
+               status  : true,
+               message : 'Stop Successfully',
+               board   : karbon,
+               ticket  : ticket
+          })
+     } 
+}
+
 const get_lists = async (req, res) => {
      const user = await User.find({});
      const project = await Project.find({});
@@ -217,4 +270,4 @@ const get_lists = async (req, res) => {
      })
 }
 
-module.exports = {user_register, user_activate, user_login, user_dashboard, create_karbon, get_karbon, get_karbon_detail, update_karbon_detail, get_lists};
+module.exports = {user_register, user_activate, user_login, user_dashboard, create_karbon, get_karbon, get_karbon_detail, update_karbon_detail, get_lists, active_karbon_detail};

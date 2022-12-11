@@ -19,7 +19,7 @@ const TicketDetail = () => {
         dataFetchedRef.current = true;
         dispatch(ticketActions.ticket_fetch());
         dispatch(ticketActions.ticket_detail(id));
-    }, [id])
+    }, [id, dispatch])
 
     return (
         <>
@@ -75,7 +75,7 @@ const TicketDetail = () => {
                                                     <div className='mb-0'> 
                                                         <div title={ticketDetail?.priority} className={`typeinfoP ${ticketDetail?.priority}`}>
                                                             {   
-                                                                ticketDetail?.priority == 'Low' || ticketDetail?.priority == 'Medium' ? <i className="fa fa-arrow-down" /> : <i className="fa fa-arrow-up" /> 
+                                                                ticketDetail?.priority === 'Low' || ticketDetail?.priority === 'Medium' ? <i className="fa fa-arrow-down" /> : <i className="fa fa-arrow-up" /> 
                                                             }
                                                         </div> 
                                                     </div>
@@ -111,13 +111,18 @@ const TicketDetail = () => {
                                                     <p className='mb-0'>{moment(ticketDetail?.updatedAt).format('D MMM, YY | h:mm:ss A')}</p>
                                                 </div>
 
-                                                <div className='col-boxs issue-list bg-white p-3 mb-0'>
+                                                <div className='col-boxs issue-list bg-white p-3 mb-3'>
                                                     <label>Sprint</label>
                                                     <div className='d-flex gap-2'>{
                                                         ticketDetail?.board?.map((item)=>{
                                                                 return ( <span key={item._id}><Link to={`/board/${item._id}`}>{item.name}</Link></span> )
                                                         })
                                                     }</div>
+                                                </div>
+
+                                                <div className='col-boxs issue-list bg-white p-3 mb-3'>
+                                                    <label>Story Point</label>
+                                                    <p className='mb-0'>{ticketDetail?.points}</p>
                                                 </div>
                                         </div>
 

@@ -316,3 +316,38 @@ a{ text-decoration: none;}
         .chans div:nth-child(1){ border: none;}
 
         .h-ober{ height: 80vh; overflow: scroll;}
+
+        .cpointer{ cursor: pointer; color: #0747a6;}
+
+        .accordion-item:last-of-type{ margin-bottom: 0;}
+ .hide-placeholder{ display: none;}
+
+ .no-scroll{     transform: none !important;
+    position: static !important;
+    cursor: inherit !important;}
+
+ .my-n3 {
+    margin-top: -1rem!important;
+    margin-bottom: -1rem!important;
+  }
+
+  .accordion div.my-3 > div button{  padding: 30px 20px;}
+
+  .accordion div.my-3  .accordion-item{ border: 2px solid #fff; }
+
+  .accordion div.my-3 > div[style*="transform"] .accordion-item { border: 2px dotted #000; }
+
+  .h-aj{ max-height: calc(100% - 20px);}
+ 
+  .model-show{ position: fixed; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1; display: flex; align-items: center; justify-content: center;}
+
+  .cls-btn{
+    font-family: monospace;
+    border: none;
+    padding: 0 10px;
+    font-size: 25px;
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    background: transparent;
+  }
