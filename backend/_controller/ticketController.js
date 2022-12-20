@@ -104,9 +104,10 @@ const edit_ticket = async (req, res) => {
      );
 
      res.json({
-          statuc : true,
+          status : true,
+          message : 'Issue Edit Successfully',
           data : ticket
-     })
+     }) 
 }
 
 module.exports = { get_Data, create_create, get_all, my_tickets, get_ticket, edit_ticket }

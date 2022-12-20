@@ -30,7 +30,7 @@ const ProjectBox = ({data}) => {
                 
                 <OverlayTrigger overlay={(props) => (
                         <Tooltip {...props}>
-                            {status}
+                            {status} %
                         </Tooltip>
                 )}
                     placement="top"

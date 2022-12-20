@@ -21,11 +21,13 @@ const create_project = async (req, res) => {
 
 const get_list = async (req, res) => {
     const project = await Project.find({}).populate('isUser');
-
+    const ticket = await Ticket.find({}).populate('project');
+    
     res.json({
           status : true,
-          message : 'Project Fetched Successfully',
-          projects : project
+          message : 'Project Fetched Successfullys',
+          projects : project,
+          tickets : ticket
     })
 }
 
